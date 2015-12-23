@@ -6,6 +6,7 @@ interface
 
 uses {$IFDEF USE_GENERICS}RestJsonGenerics, {$ENDIF}
      {$IFDEF USE_SUPER_OBJECT}RestJsonOldRTTI, {$ENDIF}
+     {$IFDEF UNIX}unixtype,Types,{$ENDIF}
      SysUtils, DateUtils, TypInfo;
 
 type
@@ -27,15 +28,15 @@ type
     class function UnMarshal(AClassType: TClass; AJsonText: String): TObject;overload;
   end;
 
-function JavaToDelphiDateTime(const dt: int64): TDateTime;
-function DelphiToJavaDateTime(const dt: TDateTime): int64;
+//function JavaToDelphiDateTime(const dt: int64): TDateTime;
+//function DelphiToJavaDateTime(const dt: TDateTime): int64;
 function ISO8601DateToJavaDateTime(const str: String; var ms: Int64): Boolean;
 function ISO8601DateToDelphiDateTime(const str: string; var dt: TDateTime): Boolean;
 function DelphiDateTimeToISO8601Date(dt: TDateTime): string;
 
 implementation
 
-{$IFNDEF MACOS}
+{$IFDEF WINDOWS}
 uses Windows;
 
 {$IFDEF WINDOWSNT_COMPATIBILITY}
@@ -264,8 +265,9 @@ function SystemTimeToTzSpecificLocalTime(
   lpTimeZoneInformation: PTimeZoneInformation;
   lpUniversalTime, lpLocalTime: PSystemTime): BOOL; stdcall; external 'kernel32.dll';
 {$ENDIF WINDOWSNT_COMPATIBILITY}
-{$ENDIF MACOS}
+{$ENDIF WINDOWS}
 
+{$IFDEF WINDOWS}
 {$IFDEF DELPHI_XE_UP}
 function JavaToDelphiDateTime(const dt: int64): TDateTime;
 var
@@ -296,6 +298,7 @@ begin
   SystemTimeToTzSpecificLocalTime(nil, @t, @t);
   Result := SystemTimeToDateTime(t);
 end;
+{$ENDIF WINDOWS}
 
 function DelphiToJavaDateTime(const dt: TDateTime): int64;
 var
@@ -311,10 +314,10 @@ end;
 function GetTimeBias: integer;
 var
   TimeVal: TTimeVal;
-  TimeZone: TTimeZone;
+ // TimeZone: TTimeZone;
 begin
-  fpGetTimeOfDay(@TimeVal, @TimeZone);
-  Result := TimeZone.tz_minuteswest;
+  //fpGetTimeOfDay(@TimeVal, @TimeZone);
+  //Result := TimeZone.tz_minuteswest;
 end;
 {$ELSE}
 function GetTimeBias: integer;
@@ -975,7 +978,7 @@ begin
   ms := 0;
   Result := ISO8601DateToJavaDateTime(str, ms);
   if Result then
-    dt := JavaToDelphiDateTime(ms)
+    //dt := JavaToDelphiDateTime(ms)
 end;
 
 function DelphiDateTimeToISO8601Date(dt: TDateTime): String;

@@ -4,10 +4,12 @@ interface
 
 uses SysUtils, DateUtils;
 
-type
+
 {$I DelphiRest.inc}
 
 {$IFDEF USE_GENERICS}
+type
+
   TJsonAttribute = class(TCustomAttribute)
   private
     FName: string;
@@ -15,15 +17,17 @@ type
     constructor Create(const AName: string);
     property Name: string read FName;
   end;
-
+  JsonISO8601 = class(TCustomAttribute);
   JsonName = class(TJsonAttribute);
   JsonDefault = class(TJsonAttribute);
-  JsonISO8601 = class(TCustomAttribute);
-{$ENDIF}  
+{$ENDIF}
+
+
 
 implementation
 
-{$IFNDEF MACOS}
+
+{$IFDEF WINDOWS}
 uses Windows;
 
 {$IFDEF WINDOWSNT_COMPATIBILITY}

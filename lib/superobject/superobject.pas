@@ -87,21 +87,21 @@
 {.$DEFINE DEBUG} // track memory leack
 
 
-{$if defined(FPC) or defined(VER170) or defined(VER180) or defined(VER190) or defined(VER200) or defined(VER210)}
+//{$if defined(FPC) or defined(VER170) or defined(VER180) or defined(VER190) or defined(VER200) or defined(VER210)}
   {$DEFINE HAVE_INLINE}
-{$ifend}
+//{$ifend}
 
 {$IFDEF DELPHI_2010_UP}
-  {$define HAVE_RTTI}
+  {$undef HAVE_RTTI}
 {$ENDIF}
 
 {$IFDEF DELPHI_XE_UP}
   {$define NEED_FORMATSETTINGS}
 {$ENDIF}
 
-{$if defined(FPC) and defined(VER2_6)}
+//{$if defined(FPC) and defined(VER2_6)}
   {$define NEED_FORMATSETTINGS}
-{$ifend}
+//{$ifend}
 
 {$OVERFLOWCHECKS OFF}
 {$RANGECHECKS OFF}
@@ -112,7 +112,7 @@ interface
 uses
   Classes
 {$IFDEF HAVE_RTTI}
-  , Generics.Collections, RTTI, TypInfo, DbxJsonUtils, DBXJsonHelpers
+  , Generics.Collections, rttiutils, TypInfo, DbxJsonUtils, DBXJsonHelpers
 {$ENDIF}
   ;
 
@@ -656,8 +656,9 @@ type
 {$ELSE}
     function QueryInterface(const IID: TGUID; out Obj): HResult; virtual; stdcall;
 {$ENDIF}
-    function _AddRef: Integer; virtual; stdcall;
-    function _Release: Integer; virtual; stdcall;
+   function _AddRef : longint;{$IFNDEF WINDOWS}cdecl{$ELSE}stdcall{$ENDIF};
+    function _Release : longint;{$IFNDEF WINDOWS}cdecl{$ELSE}stdcall{$ENDIF};
+
 
     function GetO(const path: SOString): ISuperObject;
     procedure PutO(const path: SOString; const Value: ISuperObject);
@@ -4700,12 +4701,15 @@ begin
   end;
 end;
 
-function TSuperObject._AddRef: Integer; stdcall;
+function TSuperObject._AddRef : longint;{$IFNDEF
+WINDOWS}cdecl{$ELSE}stdcall{$ENDIF};
 begin
   Result := InterlockedIncrement(FRefCount);
 end;
 
-function TSuperObject._Release: Integer; stdcall;
+
+function TSuperObject._Release : longint;{$IFNDEF
+WINDOWS}cdecl{$ELSE}stdcall{$ENDIF};
 begin
   Result := InterlockedDecrement(FRefCount);
   if Result = 0 then

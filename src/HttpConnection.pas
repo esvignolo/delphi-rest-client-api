@@ -10,7 +10,7 @@ const
   TIMEOUT_RECEIVE_DEFAULT = 30000;
 
 type
-  THttpConnectionType = (hctUnknown, hctIndy, hctWinHttp, hctWinInet, hctCustom);
+  THttpConnectionType = (hctUnknown, hctIndy, hctWinHttp, hctWinInet, hctFpHttp, hctCustom);
 
   EHTTPError = class(Exception)
     private

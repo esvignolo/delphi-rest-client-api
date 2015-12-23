@@ -2,25 +2,25 @@ unit DataSetUtils;
 
 interface
 
-uses DB, SysUtils;
+uses DB, SysUtils, BufDataset;
 
 type
   TDataSetUtils = class
   public
-    class function CreateField(DataSet: TDataSet; FieldType: TFieldType; const FieldName: string = ''; ASize: Integer=0; ADisplayWidth: Integer = 30): TField;
-    class function CreateDataSetField(DataSet: TDataSet; const FieldName: string): TDataSetField;
+    class function CreateField(DataSet: TBufDataset; FieldType: TFieldType; const FieldName: string = ''; ASize: Integer=0; ADisplayWidth: Integer = 30): TField;
+    class function CreateDataSetField(DataSet: TBufDataset; const FieldName: string): TField;
   end;
 
 implementation
 
 { TDataSetUtils }
 
-class function TDataSetUtils.CreateDataSetField(DataSet: TDataSet;const FieldName: string): TDataSetField;
+class function TDataSetUtils.CreateDataSetField(DataSet: TBufDataset;const FieldName: string): TField;
 begin
-  Result := TDataSetField(CreateField(DataSet, ftDataSet, FieldName));
+  Result := TField(CreateField(DataSet, ftDataSet, FieldName));
 end;
 
-class function TDataSetUtils.CreateField(DataSet: TDataSet;
+class function TDataSetUtils.CreateField(DataSet: TBufDataset;
   FieldType: TFieldType; const FieldName: string; ASize: Integer; ADisplayWidth: Integer): TField;
 begin
     Result:= DefaultFieldClasses[FieldType].Create(DataSet);

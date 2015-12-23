@@ -102,11 +102,18 @@ begin
                           tkClass: begin
                                       value := Null;
 
-                                      vObjClass := GetObjectPropClass(Result, vPropInfo);
+                                      {$IFNDEF FPC}vObjClass := GetObjectPropClass(Result, vPropInfo);
+                                      {$ELSE}
+                                      vObjClass := GetObjectPropClass(Result, vPropInfo.Name);
+                                      {$ENDIF}
+
 
                                       if vObjClass.InheritsFrom(TList) then
                                       begin
-                                        vObjProp := FromList(vObjClass, vPropInfo, AJSONValue.O[vPropName])
+                                        {$IFNDEF FPC}vObjProp := FromList(vObjClass, vPropInfo, AJSONValue.O[vPropName]);
+                                        {$ELSE}
+                                        vObjProp := FromList(vObjClass, vPropInfo, AJSONValue.O[vPropName]);
+                                        {$ENDIF}
                                       end
                                       else
                                       begin
@@ -154,13 +161,13 @@ begin
   case ObjectGetType(AJSONValue) of
     stInt, stDouble, stCurrency:
       begin
-        if APropInfo^.PropType^ = System.TypeInfo(TDateTime) then
+        if APropInfo.PropType = System.TypeInfo(TDateTime) then
         begin
           Result := JavaToDelphiDateTime(AJSONValue.AsInteger);
         end
         else
         begin
-          case GetTypeData(APropInfo^.PropType^).FloatType of
+          case GetTypeData(APropInfo.PropType).FloatType of
             ftSingle: Result := AJSONValue.AsDouble;
             ftDouble: Result := AJSONValue.AsDouble;
             ftExtended: Result := AJSONValue.AsDouble;

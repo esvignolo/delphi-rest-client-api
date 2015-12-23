@@ -11,7 +11,7 @@ uses Classes, SysUtils, HttpConnection,
      {$ELSE}
      Contnrs, OldRttiUnMarshal,
      {$ENDIF}
-     DB, JsonListAdapter;
+     DB, JsonListAdapter, BufDataset;
 
 const
   DEFAULT_COOKIE_VERSION = 1; {Cookies using the default version correspond to RFC 2109.}
@@ -219,9 +219,9 @@ type
     {$ENDIF}
 
     {$IFDEF USE_SUPER_OBJECT}
-    procedure GetAsDataSet(ADataSet: TDataSet);overload;
-    function GetAsDataSet(): TDataSet;overload;
-    function GetAsDataSet(const RootElement: String): TDataSet;overload;
+    procedure GetAsDataSet(ADataSet: TBufDataSet);overload;
+    function GetAsDataSet(): TBufDataSet;overload;
+    function GetAsDataSet(const RootElement: String): TBufDataSet;overload;
     {$ENDIF}
   end;
 
@@ -268,7 +268,7 @@ end;
 
 function TRestClient.DoCustomCreateConnection: IHttpConnection;
 begin
-  if Assigned(FOnCustomCreateConnection) then
+       if Assigned(FOnCustomCreateConnection) then
   begin
     FOnCustomCreateConnection(Self, FConnectionType, Result);
 
@@ -813,7 +813,7 @@ end;
 {$ENDIF}
 
 {$IFDEF USE_SUPER_OBJECT}
-function TResource.GetAsDataSet(const RootElement: String): TDataSet;
+function TResource.GetAsDataSet(const RootElement: String): TBufDataSet;
 var
   vJson: ISuperObject;
 begin
@@ -826,7 +826,7 @@ begin
   end;
 end;
 
-function TResource.GetAsDataSet: TDataSet;
+function TResource.GetAsDataSet: TBufDataSet;
 var
   vJson: ISuperObject;
 begin
@@ -837,7 +837,7 @@ begin
   TJsonToDataSetConverter.UnMarshalToDataSet(Result, vJson);
 end;
 
-procedure TResource.GetAsDataSet(ADataSet: TDataSet);
+procedure TResource.GetAsDataSet(ADataSet: TBufDataSet);
 var
   vJson: string;
 begin

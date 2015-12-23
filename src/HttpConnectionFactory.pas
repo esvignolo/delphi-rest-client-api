@@ -24,6 +24,9 @@ uses SysUtils,
     {$IFDEF USE_WIN_INET}
     HttpConnectionWinInet,
     {$ENDIF}
+    {$IFDEF USE_FP_HTTP}
+    HttpConnectionFpHttp,
+    {$ENDIF}
     Classes, TypInfo;
     
 { THttpConnectionFactory }
@@ -45,6 +48,11 @@ begin
                 Result := THttpConnectionWinInet.Create(False);
                 {$ELSE}
                 raise Exception.Create('WinInet not supported. If do you run under windows, enable USE_WIN_INET compiler directive.');
+                {$ENDIF}
+   hctFpHttp: {$IFDEF USE_FP_HTTP}
+                Result := THttpConnectionWinHttp.Create;
+                {$ELSE}
+                raise Exception.Create('FpHttp not supported.');
                 {$ENDIF}
   else
     raise Exception.CreateFmt('Connection Type "%s" is not supported.', [GetEnumName(TypeInfo(THttpConnectionType), Ord(AType))]);

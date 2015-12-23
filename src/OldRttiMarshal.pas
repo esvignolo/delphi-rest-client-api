@@ -114,7 +114,7 @@ end;
 
 function TOldRttiMarshal.ToFloat(AObject: TObject; APropInfo: PPropInfo): ISuperObject;
 begin
-  if APropInfo^.PropType^ = System.TypeInfo(TDateTime) then
+  if APropInfo.PropType = System.TypeInfo(TDateTime) then
     Result := TSuperObject.Create(DelphiToJavaDateTime(GetFloatProp(AObject, APropInfo)))
   else
     Result := TSuperObject.Create(GetFloatProp(AObject, APropInfo));
@@ -131,7 +131,7 @@ var
 begin
   vIntValue := GetOrdProp(AObject, APropInfo);
 
-  if APropInfo^.PropType^ = TypeInfo(Boolean) then
+  if APropInfo.PropType = TypeInfo(Boolean) then
     Result := TSuperObject.Create(Boolean(vIntValue))
   else
     Result := TSuperObject.Create(vIntValue);
