@@ -114,10 +114,11 @@ end;
 
 function TOldRttiMarshal.ToFloat(AObject: TObject; APropInfo: PPropInfo): ISuperObject;
 begin
-  if APropInfo.PropType = System.TypeInfo(TDateTime) then
-    Result := TSuperObject.Create(DelphiToJavaDateTime(GetFloatProp(AObject, APropInfo)))
-  else
-    Result := TSuperObject.Create(GetFloatProp(AObject, APropInfo));
+  //Solve This
+  //if APropInfo.PropType = System.TypeInfo(TDateTime) then
+  //  Result := TSuperObject.Create(DelphiToJavaDateTime(GetFloatProp(AObject, APropInfo)))
+  //else
+  //  Result := TSuperObject.Create(GetFloatProp(AObject, APropInfo));
 end;
 
 function TOldRttiMarshal.ToInt64(AObject: TObject;APropInfo: PPropInfo): ISuperObject;
@@ -131,10 +132,11 @@ var
 begin
   vIntValue := GetOrdProp(AObject, APropInfo);
 
-  if APropInfo.PropType = TypeInfo(Boolean) then
-    Result := TSuperObject.Create(Boolean(vIntValue))
-  else
-    Result := TSuperObject.Create(vIntValue);
+  //Solve this
+  //if APropInfo.PropType = TypeInfo(Boolean) then
+  //  Result := TSuperObject.Create(Boolean(vIntValue))
+  //else
+  //  Result := TSuperObject.Create(vIntValue);
 end;
 
 class function TOldRttiMarshal.ToJson(AObject: TObject): ISuperObject;

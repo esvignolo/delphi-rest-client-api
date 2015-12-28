@@ -50,7 +50,7 @@ begin
                 raise Exception.Create('WinInet not supported. If do you run under windows, enable USE_WIN_INET compiler directive.');
                 {$ENDIF}
    hctFpHttp: {$IFDEF USE_FP_HTTP}
-                Result := THttpConnectionWinHttp.Create;
+                Result := THttpConnectionFpHttp.Create;
                 {$ELSE}
                 raise Exception.Create('FpHttp not supported.');
                 {$ENDIF}

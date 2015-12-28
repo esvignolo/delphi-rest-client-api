@@ -102,9 +102,10 @@ begin
                           tkClass: begin
                                       value := Null;
 
-                                      {$IFNDEF FPC}vObjClass := GetObjectPropClass(Result, vPropInfo);
+                                      {$IFNDEF FPC}
+                                         vObjClass := GetObjectPropClass(Result, vPropInfo);
                                       {$ELSE}
-                                      vObjClass := GetObjectPropClass(Result, vPropInfo.Name);
+                                         vObjClass := GetObjectPropClass(Result, vPropName);
                                       {$ENDIF}
 
 
@@ -148,7 +149,7 @@ begin
                 end;
               end;
     stArray: begin
-               Result := FromList(AClassType, nil, AJSONValue);
+               Result := FromList(AClassType, AClassType, AJSONValue);
              end;
   end;
 end;
@@ -158,32 +159,33 @@ var
   o: ISuperObject;
 begin
   Result := Null;
-  case ObjectGetType(AJSONValue) of
-    stInt, stDouble, stCurrency:
-      begin
-        if APropInfo.PropType = System.TypeInfo(TDateTime) then
-        begin
-          Result := JavaToDelphiDateTime(AJSONValue.AsInteger);
-        end
-        else
-        begin
-          case GetTypeData(APropInfo.PropType).FloatType of
-            ftSingle: Result := AJSONValue.AsDouble;
-            ftDouble: Result := AJSONValue.AsDouble;
-            ftExtended: Result := AJSONValue.AsDouble;
-            ftCurr: Result := AJSONValue.AsCurrency;
-          end;
-        end;
-      end;
-    stString:
-      begin
-        o := SO(AJSONValue.AsString);
-        if not ObjectIsType(o, stString) then
-        begin
-          Result := FromFloat(APropInfo, o);
-        end;
-      end
-  end;
+  //Solve This
+  //case ObjectGetType(AJSONValue) of
+  //  stInt, stDouble, stCurrency:
+  //    begin
+  //      if System.TypeInfo(APropInfo) = System.TypeInfo(TDateTime) then
+  //      begin
+  //        Result := JavaToDelphiDateTime(AJSONValue.AsInteger);
+  //      end
+  //      else
+  //      begin
+  //        case GetTypeData(System.TypeInfo(APropInfo)).FloatType of
+  //          ftSingle: Result := AJSONValue.AsDouble;
+  //          ftDouble: Result := AJSONValue.AsDouble;
+  //          ftExtended: Result := AJSONValue.AsDouble;
+  //          ftCurr: Result := AJSONValue.AsCurrency;
+  //        end;
+  //      end;
+  //    end;
+  //  stString:
+  //    begin
+  //      o := SO(AJSONValue.AsString);
+  //      if not ObjectIsType(o, stString) then
+  //      begin
+  //        Result := FromFloat(APropInfo, o);
+  //      end;
+  //    end
+  //end;
 end;
 
 function TOldRttiUnMarshal.FromInt(APropInfo: PPropInfo; const AJSONValue: ISuperObject): Variant;
